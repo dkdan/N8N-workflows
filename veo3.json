@@ -1,0 +1,364 @@
+{
+  "name": "veo3",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -32
+      ],
+      "id": "696677bd-9887-41e4-a883-a18b9e38160c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a nconew field called 'myNewField' to the JSON of each one\nconst min =1;\nconst max =10;\nconst randomNumber= Math.floor(Math.random() * (max-min + 1)) + min;\n\nreturn [{json: {randomNumber}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        -32
+      ],
+      "id": "4b2fdf35-2b8f-4cda-8d92-8fbef06e5b57",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=generate a prompt for  {{ $json.randomNumber }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI that generates random video prompts for short form content.  \nYour ONLY output must strictly follow this JSON structure:\n\n{\n  \"title\": \"Exciting, descriptive, simplistic title here\",\n  \"description\": \"Short, few sentence description based on the story\",\n  \"prompt\": \"AI video generation prompt here\"\n}\n\nGuidelines:\n- The \"title\" must be short, eye-catching, and easy to understand.  \n- The \"description\" should be 1–3 sentences summarizing the crazy event in a fun, engaging way.  \n- The \"prompt\" must be a detailed AI video generation prompt describing the scene from the primary video types below. Always choose a random one.  \n- Never break JSON format. Never add extra text or explanation outside the JSON.  \n- Never repeat a video, always cycle through them.\n-word prompts in a way that seems safe to not trigger any violent video restrictions while maintaining the overall goal of the story. Keep the prompts short and to the point, only include essential details\n\nPrimary Video Types:\n\n🎥 1. “The Goal That Changed Everything”\n\nScene: A crowded living room during a big soccer match.\nPrompt: “POV: One more goal to win your ticket.”\nAction: Everyone jumps, screams, throws snacks, hugs, and even a pet gets excited.\nSound: Stadium cheer SFX + trending hype song.\n\n🎥 2. “Lottery of the Season”\n\nScene: A person opening an envelope or checking an email.\nPrompt: “POV: Your Ticket just won”\nAction: Jaw drop ➜ disbelief ➜ screaming ➜ calling friends ➜ jumping on bed.\nSound: Rising tension music ➜ cut to explosion of cheers.\n\n🎥 3. “When Underdogs Win”\n\nScene: A bar full of fans watching a game.\nPrompt: “Mr EZ wins Ticket actually won”\nAction: Everyone goes silent for a second ➜ then full chaos — drinks flying, hugging strangers.\nSound: Stadium horn or whistle sound effect.\n\n🎥 4. “From Chill to Wild in 3 Seconds”\n\nScene: Two friends calmly watching TV.\nPrompt: “I tried it and I actually won”\nAction: Calm ➜ sudden leap ➜ sofa flip ➜ celebration dance.\nSound: Quiet background ➜ cut to bass drop / explosion cheer.\n\n🎥 5. “Family Game Night, Sports Edition”\n\nScene: Whole family watching a match together — kids, grandparents, snacks everywhere.\nPrompt: “The game is more fun when you have a ticket to win”\nAction: Everyone shouting at the screen, dad jumps, grandma high-fives, kids cheering.\nSound: Chaotic fun with laughter overlay.\n\n🎥 6. “The Lucky Ticket Reaction”\n\nScene: A group of friends entering a giveaway for game tickets.\nPrompt: “We just won the tickets… guess who 😏”\nAction: Tension build ➜ one friend screams in disbelief ➜ everyone lifts them up.\nSound: Dramatic pause ➜ explosion of sound effects.\n\n🎥 7. “Street Celebration Madness”\n\nScene: People watching a game on a public screen or street TV.\nPrompt: “We all celebrate like we all scored the goal”\nAction: Flags waving, people dancing, someone jumps into a fountain, group chants.\nSound: Real street cheering SFX + drums or vuvuzela.\n\n🎥 8. “The Moment You Knew You’d Remember Forever”\n\nScene: Close-up shots of people watching a crucial sports moment.\nPrompt: “I gave it a shot and I won”\nAction: Slow-mo reactions — disbelief ➜ joy ➜ tears ➜ hugging.\nSound: Emotional cinematic music + slow build.\n\n🎥 9. “Office Watch Party Gone Wild”\n\nScene: Office workers pretending to work while streaming the match on a screen.\nPrompt: “We won our ticket but the boss just came in”\nAction: Freeze ➜ boss yells ➜ boss joins celebration instead.\nSound: Fun comedic sound effect or whistle.\n\n🎥 10. “First Game Ever”\n\nScene: Parent taking their kid to their first live sports match.\nPrompt: “Guess who just won their ticket”\nAction: Kid’s eyes widen ➜ jumps ➜ waves flag ➜ high-fives strangers.\nSound: Wholesome upbeat soundtrack."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -448,
+        -32
+      ],
+      "id": "a67f309f-ee8b-4d86-80e4-159a8aa01427",
+      "name": "Idea Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -592,
+        176
+      ],
+      "id": "e8eac192-a61c-4eb6-a6d3-3cb8a9e6b222",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "FeLJbGFOU3uqXtgZ",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        -704,
+        176
+      ],
+      "id": "ce82b8d3-9dfa-4f80-ade1-f8b5462712b3",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "={\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\",\n      \"description\": \"A short, exciting, descriptive, simplistic YouTube Shorts title\"\n    },\n    \"description\": {\n      \"type\": \"string\",\n      \"description\": \"1–3 sentences summarizing the crazy water event\"\n    },\n    \"prompt\": {\n      \"type\": \"string\",\n      \"description\": \"A detailed AI video generation prompt\"\n    }\n  },\n  \"required\": [\"title\", \"description\", \"prompt\"]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        176
+      ],
+      "id": "43b2c6fb-6614-46eb-8104-b9249f444a5b",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/veo/generate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <token>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{ $json.output.prompt }}\",\n  \"model\": \"veo3_fast\",\n  \"watermark\": \"MrEZWins\",\n  \"callBackUrl\": \"http://your-callback-url.com/complete\",\n  \"aspectRatio\": \"16:9\",\n  \"seeds\": 12345,\n  \"enableFallback\": false,\n  \"enableTranslation\": true,\n  \"generationType\": \"TEXT_2_VIDEO\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -96,
+        -32
+      ],
+      "id": "bd42c514-f098-4e4a-b3d9-8706d8c8893e",
+      "name": "Create Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "bYXq2vuXe1CVCkPb",
+          "name": "Kie AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 250
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -32
+      ],
+      "id": "78100585-f80a-4f4c-9b34-c1c399d8585d",
+      "name": "Wait",
+      "webhookId": "572a828a-0a0f-4917-96bb-5d13da40c92f"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -32
+      ],
+      "id": "8639e5dd-269e-41c0-b886-5cc79b02d738",
+      "name": "Get Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "bYXq2vuXe1CVCkPb",
+          "name": "Kie AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "mediaUrl": "={{ JSON.parse($json.data.resultJson).resultUrls[0] }}"
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        528,
+        -32
+      ],
+      "id": "7780e9a4-b500-4810-9150-bd4998453592",
+      "name": "Upload media",
+      "credentials": {
+        "blotatoApi": {
+          "id": "SbcjH1Zjn55VYZM3",
+          "name": "Blotato account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "platform": "tiktok",
+        "accountId": {
+          "__rl": true,
+          "value": "19352",
+          "mode": "list",
+          "cachedResultName": "dkaysacademy",
+          "cachedResultUrl": "https://backend.blotato.com/v2/accounts/19352"
+        },
+        "postContentText": "=",
+        "options": {}
+      },
+      "type": "@blotato/n8n-nodes-blotato.blotato",
+      "typeVersion": 2,
+      "position": [
+        736,
+        -32
+      ],
+      "id": "c3eeb172-54da-4ecf-8053-ee66d71d501c",
+      "name": "Create post",
+      "credentials": {
+        "blotatoApi": {
+          "id": "SbcjH1Zjn55VYZM3",
+          "name": "Blotato account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Idea Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Idea Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Idea Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Idea Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea Agent": {
+      "main": [
+        [
+          {
+            "node": "Create Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Video": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video": {
+      "main": [
+        [
+          {
+            "node": "Upload media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload media": {
+      "main": [
+        [
+          {
+            "node": "Create post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "681b2a0d-a90c-4bd3-927c-0e9933fd43ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "31c53d16da6a31e95077cff605c8e25694b5930cf7040dbaee1897b5c5bcefcd"
+  },
+  "id": "EtfBAqBEawf7OzDb",
+  "tags": []
+}
